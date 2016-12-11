@@ -36,7 +36,6 @@ public class Main {
 
     public static void main(@Nonnull final String[] args) throws IOException, SQLException {
         final Options options = getOptions(args);
-
         final String host = options.getHost();
         final int port = options.getPort();
         final String database = options.getDatabase();
@@ -77,9 +76,15 @@ public class Main {
     @Nonnull
     private static Options getOptions(@Nonnull final String[] args) {
         final Options options = new Options();
-        final JCommander jCommander = new JCommander(options);
-        jCommander.parse(args);
-        return options;
+        final JCommander jCommander = new JCommander(options, args);
+        jCommander.setProgramName("Generate H2 Database");
+        if (options.help()) {
+            jCommander.usage();
+            System.exit(0);
+            return null;
+        } else {
+            return options;
+        }
     }
 
     private static boolean run(@Nonnull final String queryTemplate, @Nonnull final Options options,
